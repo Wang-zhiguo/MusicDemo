@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">GlideDemo</string>
+    <string name="app_name">听音乐</string>
+
+    <string name="lrc_label">暂无歌词</string>
 </resources>

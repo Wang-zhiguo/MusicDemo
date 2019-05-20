@@ -318,6 +318,19 @@ public class MusicBean {
         private String album_500_500;
         private String album_800_800;
         private String album_1000_1000;
+        //----------------新增-----------------------
+        //作用：用来存储歌曲的实际地址，用于播放歌曲
+        private String url;
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+        //-----------------新增----------------------
+
 
         public String getArtist_id() {
             return artist_id;
