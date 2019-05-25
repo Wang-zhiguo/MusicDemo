@@ -1,41 +1,37 @@
-package cn.wang.glidedemo;
+package cn.wang.glidedemo.view;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Icon;
-import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RemoteViews;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
+import cn.wang.glidedemo.adapter.BaseRecyclerAdapter;
+import cn.wang.glidedemo.adapter.BaseViewHolder;
+import cn.wang.glidedemo.adapter.EndLessOnScrollListener;
+import cn.wang.glidedemo.MusicApp;
+import cn.wang.glidedemo.bean.MusicBean;
+import cn.wang.glidedemo.bean.NotificationContentWrapper;
+import cn.wang.glidedemo.R;
+import cn.wang.glidedemo.service.PlayService;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -44,7 +40,7 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    String path = "http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.billboard.billList&type=1&size=10&offset=";
+    String path = "http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.billboard.billList&type=21&size=10&offset=";
     String playpath = "http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.song.play&songid=";
     private RecyclerView rv_music;
     private BaseRecyclerAdapter mAdapter;
@@ -54,8 +50,10 @@ public class MainActivity extends AppCompatActivity {
     private ImageView iv_lyrics;
     private TextView tv_title;
     private TextView tv_artist;
-
-
+    /**
+     * 是否还有下一页
+     */
+    private boolean hasNext = true;
 
 
     protected PlayService playService;
@@ -138,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         iv_next.setOnClickListener(v -> playService.next());
         iv_lyrics = findViewById(R.id.iv_lyrics);
         iv_lyrics.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this,MusicPlayActivity.class);
+            Intent intent = new Intent(MainActivity.this, MusicPlayActivity.class);
             startActivity(intent);
         });
         tv_title = findViewById(R.id.tv_title);
@@ -168,7 +166,9 @@ public class MainActivity extends AppCompatActivity {
         rv_music.addOnScrollListener(new EndLessOnScrollListener(manager) {
             @Override
             public void onLoadMore(int currentPage) {
-                initData(currentPage);
+                if(hasNext) {
+                    initData(currentPage);
+                }
             }
         });
     }
@@ -186,8 +186,16 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 Gson gson = new Gson();
                 MusicBean musicBean = gson.fromJson(response.body().string(), MusicBean.class);
+                //为歌曲加载播放歌曲时使用的url
                 for (MusicBean.SongListBean bean:musicBean.getSong_list()) {
                     setMusicUrl(bean);
+                }
+                /**
+                 * 判断是否还有下一页，方法：
+                 *  假设每页加载10条数据，如果本次加载10条，那么还有下一页；如果不足10条，说明已是最后一页。
+                 */
+                if(musicBean.getSong_list().size()<10){
+                    hasNext = false;
                 }
                 runOnUiThread(new Runnable() {
                     @Override

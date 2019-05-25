@@ -2,6 +2,8 @@ package cn.wang.glidedemo;
 
 import android.app.Application;
 
+import cn.wang.glidedemo.bean.NotificationContentWrapper;
+
 /**
  * Time: 2019-05-16
  * Author: wangzhiguo

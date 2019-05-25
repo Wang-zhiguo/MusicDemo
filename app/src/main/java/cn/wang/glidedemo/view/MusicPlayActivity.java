@@ -1,4 +1,4 @@
-package cn.wang.glidedemo;
+package cn.wang.glidedemo.view;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.SeekBar;
 
+import cn.wang.glidedemo.MusicApp;
+import cn.wang.glidedemo.R;
 import cn.wang.glidedemo.lrc.LrcView;
 
 public class MusicPlayActivity extends AppCompatActivity {
@@ -28,8 +30,8 @@ public class MusicPlayActivity extends AppCompatActivity {
         seekBar = (SeekBar) findViewById(R.id.progress_bar);
         btnPlayPause = (Button) findViewById(R.id.btn_play_pause);
         app = (MusicApp) getApplication();
-        System.out.println("---"+app.wrapper.lrcUrl);
-        lrcView.loadLrcByUrl(app.wrapper.lrcUrl);
+        System.out.println("---"+app.getWrapper().lrcUrl);
+        lrcView.loadLrcByUrl(app.getWrapper().lrcUrl);
 
         receiver = new MusicLrcReceiver();
         IntentFilter filter = new IntentFilter();
@@ -49,8 +51,8 @@ public class MusicPlayActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if("Change_Music".equals(intent.getAction())){
-                System.out.println("---"+app.wrapper.lrcUrl);
-                lrcView.loadLrcByUrl(app.wrapper.lrcUrl);
+                System.out.println("---"+app.getWrapper().lrcUrl);
+                lrcView.loadLrcByUrl(app.getWrapper().lrcUrl);
             }else if("Change_Position".equals(intent.getAction())){
                 int pos = intent.getIntExtra("pos",0);
                 int duration = intent.getIntExtra("duration",0);

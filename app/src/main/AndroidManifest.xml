@@ -13,8 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MusicPlayActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".view.MusicPlayActivity"></activity>
+        <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".PlayService" />
+        <service android:name=".service.PlayService" />
     </application>
 
 </manifest>

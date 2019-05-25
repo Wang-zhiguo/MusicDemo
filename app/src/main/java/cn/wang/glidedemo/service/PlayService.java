@@ -1,4 +1,4 @@
-package cn.wang.glidedemo;
+package cn.wang.glidedemo.service;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -21,6 +21,12 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.wang.glidedemo.view.MainActivity;
+import cn.wang.glidedemo.MusicApp;
+import cn.wang.glidedemo.bean.MusicBean;
+import cn.wang.glidedemo.view.MusicPlayActivity;
+import cn.wang.glidedemo.bean.NotificationContentWrapper;
+import cn.wang.glidedemo.R;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -43,7 +49,8 @@ public class PlayService extends Service {
 
     private MediaPlayer mPlayer;
     private int currentPosition;
-    private int mDuration;  //当前歌曲时长
+    //当前歌曲时长
+    private int mDuration;
     //当前正在播放的歌曲的位置
     ArrayList<MusicBean.SongListBean> mp3Infos;
 
@@ -58,7 +65,7 @@ public class PlayService extends Service {
     }
 
     //内部类PlayBinder实现Binder,
-    class PlayBinder extends Binder {
+    public class PlayBinder extends Binder {
         public PlayService getPlayService() {
             System.out.println("PlayService #1 " + PlayService.this);
             return PlayService.this;

@@ -1,4 +1,4 @@
-package cn.wang.glidedemo;
+package cn.wang.glidedemo.adapter;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;

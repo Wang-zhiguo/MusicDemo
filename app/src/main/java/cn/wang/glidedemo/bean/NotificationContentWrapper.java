@@ -1,4 +1,4 @@
-package cn.wang.glidedemo;
+package cn.wang.glidedemo.bean;
 
 import android.graphics.Bitmap;
 

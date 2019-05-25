@@ -1,4 +1,4 @@
-package cn.wang.glidedemo;
+package cn.wang.glidedemo.adapter;
 
 import android.content.Context;
 import android.view.ViewGroup;
