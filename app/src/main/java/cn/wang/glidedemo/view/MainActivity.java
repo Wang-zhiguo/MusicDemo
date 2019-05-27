@@ -1,5 +1,6 @@
 package cn.wang.glidedemo.view;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,8 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -24,6 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import cn.wang.glidedemo.adapter.BaseRecyclerAdapter;
 import cn.wang.glidedemo.adapter.BaseViewHolder;
 import cn.wang.glidedemo.adapter.EndLessOnScrollListener;
@@ -32,15 +38,17 @@ import cn.wang.glidedemo.bean.MusicBean;
 import cn.wang.glidedemo.bean.NotificationContentWrapper;
 import cn.wang.glidedemo.R;
 import cn.wang.glidedemo.service.PlayService;
+import cn.wang.glidedemo.utils.DownUtils;
+import cn.wang.glidedemo.utils.DownloadUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
-    String path = "http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.billboard.billList&type=21&size=10&offset=";
+    String path = "http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.billboard.billList&type=22&size=10&offset=";
     String playpath = "http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.song.play&songid=";
     private RecyclerView rv_music;
     private BaseRecyclerAdapter mAdapter;
@@ -150,6 +158,38 @@ public class MainActivity extends AppCompatActivity {
                 holder.setText(R.id.tv_title, songListBean.getTitle());
                 holder.setText(R.id.tv_singer, songListBean.getArtist_name());
                 holder.setText(R.id.tv_time, timeFormat(songListBean.getFile_duration()));
+                holder.setOnClickListener(R.id.iv_download, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        checkPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, new OnPermissionResultListener() {
+                            @Override
+                            public void onAllow() {
+                                //下载歌曲文件
+                                DownloadUtils downloadUtils = new DownloadUtils(MainActivity.this);
+                                //downloadUtils.downloadMusic(songListBean.getUrl(),songListBean.getTitle());
+                                downloadUtils.downLoadApk();
+//                                DownUtils.getsInstance().setListener(new DownUtils.OnDownloadListener() {
+//                                    @Override
+//                                    public void onDowload(String mp3Url) {
+//                                        Toast.makeText(MainActivity.this, "下载成功！", Toast.LENGTH_SHORT).show();
+//                                    }
+//
+//                                    @Override
+//                                    public void onFailed(String error) {
+//                                        Toast.makeText(MainActivity.this, "下载失败！", Toast.LENGTH_SHORT).show();
+//
+//                                    }
+//                                }).download(songListBean);
+                            }
+
+                            @Override
+                            public void onReject() {
+                                Log.d(TAG, "onReject: ");
+                            }
+                        });
+
+                    }
+                });
             }
         };
         mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {

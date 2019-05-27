@@ -17,7 +17,8 @@ import com.bumptech.glide.Glide;
  */
 
 public class BaseViewHolder extends RecyclerView.ViewHolder {
-    private SparseArray<View> mViews; //用来存储控件
+    //用来存储控件
+    private SparseArray<View> mViews;
     private View mConvertView;
     private Context mContext;
 

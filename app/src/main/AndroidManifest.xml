@@ -3,7 +3,11 @@
     package="cn.wang.glidedemo">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <!-- 往SDCard写入数据权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!--  从SDCard读取数据权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <application
         android:name=".MusicApp"
         android:allowBackup="true"
@@ -23,6 +27,15 @@
         </activity>
 
         <service android:name=".service.PlayService" />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="cn.wang.glidedemo.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>
